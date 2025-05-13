@@ -50,4 +50,34 @@ const changeStatePokemon = async (req,res) => {
         .json({"code":500,"message":error.message,"status":false})   
     }
 }
-export default {createPokemon, getPokemons, changeStatePokemon}
+
+const getPokemonByPokemonId = async (req,res)=>{
+    try {
+        const pokemon_id = req.params.pokemon_id
+        const filter = {pokemon_id:pokemon_id}
+        const pokemon = await pokemonStatusModel.findOne(filter)
+        if(pokemon==null){
+            return res.status(404).json({"code":404,"message":"pokemon no encontrado en BD","status":false})   
+        }
+        return res.status(200).json(pokemon)
+    } catch (error) {
+        return res.status(500)
+        .json({"code":500,"message":error.message,"status":false})   
+    }
+}
+
+const deletePokemonByPokemonId = async (req,res)=>{
+    try {
+        const pokemon_id = req.params.pokemon_id
+        const filter = {pokemon_id:pokemon_id}
+        const pokemon = await pokemonStatusModel.findOneAndDelete(filter)
+        if(pokemon==null){
+            return res.status(404).json({"code":404,"message":"pokemon no encontrado en BD","status":false})   
+        }
+        return res.status(200).json({"code":200,"message":"pokemon eliminado en BD","status":true})
+    } catch (error) {
+        return res.status(500)
+        .json({"code":500,"message":error.message,"status":false})   
+    }
+}
+export default {createPokemon, getPokemons, changeStatePokemon, getPokemonByPokemonId,deletePokemonByPokemonId}
